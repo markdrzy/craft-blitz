@@ -27,6 +27,7 @@ return function(Channel $channel): Generator {
     $webroot = $config['webroot'];
     $pathParam = $config['pathParam'];
 
+    $defaultPort = parse_url($url, PHP_URL_SCHEME) === 'https' ? 443 : 80;
     $queryString = parse_url($url, PHP_URL_QUERY);
     parse_str($queryString, $queryStringParams);
 
@@ -39,7 +40,7 @@ return function(Channel $channel): Generator {
         'SCRIPT_FILENAME' => $webroot . '/index.php',
         'SCRIPT_NAME' => '/index.php',
         'SERVER_NAME' => parse_url($url, PHP_URL_HOST),
-        'SERVER_PORT' => parse_url($url, PHP_URL_PORT) ?: '80',
+        'SERVER_PORT' => parse_url($url, PHP_URL_PORT) ?: $defaultPort,
         'HTTPS' => parse_url($url, PHP_URL_SCHEME) === 'https' ? 1 : 0,
         'REQUEST_URI' => parse_url($url, PHP_URL_PATH),
         'QUERY_STRING' => $queryString,
